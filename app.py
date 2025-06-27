@@ -110,6 +110,17 @@ def exportar_informe_pdf(top_keywords, df_trends):
 
     return nombre_archivo
 
+top10_keywords = [kw[0] for kw in top_keywords[:10]]
+trend_data = []
+
+if yearly_keywords:
+    for year in sorted(yearly_keywords):
+        counter = Counter(yearly_keywords[year])
+        for keyword in top10_keywords:
+            trend_data.append({'Year': year, 'Keyword': keyword, 'Frecuencia': counter.get(keyword, 0)})
+
+df_trends = pd.DataFrame(trend_data)
+
 if st.button("📄 Exportar informe como PDF"):
     nombre_pdf = exportar_informe_pdf(top_keywords, df_trends)
     with open(nombre_pdf, "rb") as f:
