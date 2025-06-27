@@ -9,7 +9,6 @@ import os
 import streamlit as st
 
 @st.cache_data
-def cargar_scopus():
 
 import pandas as pd
 
