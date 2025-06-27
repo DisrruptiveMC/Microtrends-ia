@@ -11,7 +11,7 @@ import streamlit as st
 @st.cache_data
 def cargar_scopus():
     try:
-        return pd.read_csv("scopus_consolidado.csv")  # Ajusta si el archivo tiene otro nombre
+        return pd.read_csv("scopus (5).csv")  # Ajusta si el archivo tiene otro nombre
     except Exception as e:
         st.error(f"❌ Error al cargar el archivo de Scopus: {e}")
         return pd.DataFrame()
