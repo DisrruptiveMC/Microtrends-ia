@@ -110,6 +110,23 @@ def exportar_informe_pdf(top_keywords, df_trends):
 
     return nombre_archivo
 
+all_keywords = []
+yearly_keywords = {}
+
+for _, row in scopus_df.dropna(subset=[keywords_col, year_col]).iterrows():
+    try:
+        year = int(row[year_col]) if pd.notna(row[year_col]) else None
+    except ValueError:
+        year = None
+    keywords_str = str(row[keywords_col]) if pd.notna(row[keywords_col]) else ""
+    keywords = [kw.strip().lower() for kw in keywords_str.split(';') if kw.strip()]
+    all_keywords.extend(keywords)
+    if year:
+        yearly_keywords.setdefault(year, []).extend(keywords)
+
+keyword_freq = Counter(all_keywords)
+top_keywords = keyword_freq.most_common(20)
+
 top10_keywords = [kw[0] for kw in top_keywords[:10]]
 trend_data = []
 
