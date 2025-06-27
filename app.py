@@ -10,6 +10,9 @@ import streamlit as st
 
 @st.cache_data
 def cargar_scopus():
+
+import pandas as pd
+
 try:
     scopus_df = pd.read_csv('scopus_consolidado.csv', encoding='utf-8')
     print("✅ Archivo de Scopus cargado con éxito")
