@@ -111,7 +111,7 @@ def exportar_informe_pdf(top_keywords, df_trends):
     return nombre_archivo
     
 if st.button("📄 Exportar informe como PDF"):
-    top10_keywords = [kw[0] for kw in top_keywords[:10]]
+top10_keywords = [kw[0] for kw in top_keywords[:10]]
 trend_data = []
 
 if yearly_keywords:
