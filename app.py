@@ -8,7 +8,6 @@ from reportlab.pdfgen import canvas
 import os
 import streamlit as st
 
-# === Paso 1: Cargar DataFrame ===
 @st.cache_data
 def cargar_scopus():
     try:
@@ -19,7 +18,6 @@ def cargar_scopus():
 
 scopus_df = cargar_scopus()
 
-# === Paso 2: Detectar columnas de keywords y año ===
 scopus_df.columns = [col.strip().lower() for col in scopus_df.columns]
 possible_keywords_cols = ['author keywords', 'author_keywords', 'keywords', 'keyword']
 keywords_col = next((col for col in scopus_df.columns if col in possible_keywords_cols), None)
@@ -29,7 +27,7 @@ year_col = next((col for col in scopus_df.columns if col in possible_year_cols),
 if not keywords_col or not year_col:
     st.warning("⚠️ No se encontraron columnas de keywords o año.")
 else:
-    # === Paso 3: Procesar keywords ===
+ 
     all_keywords = []
     yearly_keywords = {}
 
@@ -47,7 +45,6 @@ else:
     keyword_freq = Counter(all_keywords)
     top_keywords = keyword_freq.most_common(20)
 
-    # === Paso 4: Tendencias por año ===
     top10_keywords = [kw[0] for kw in top_keywords[:10]]
     trend_data = []
     for year in sorted(yearly_keywords):
@@ -57,7 +54,6 @@ else:
 
     df_trends = pd.DataFrame(trend_data)
 
-    # === Paso 5: Exportar PDF ===
     def exportar_informe_pdf(top_keywords, df_trends):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         file_name = f"microtrends_report_{timestamp}.pdf"
@@ -87,7 +83,6 @@ else:
         c.save()
         return file_name
 
-    # === Paso 6: Botón para generar PDF ===
     if st.button("📄 Exportar informe como PDF"):
         nombre_pdf = exportar_informe_pdf(top_keywords, df_trends)
         with open(nombre_pdf, "rb") as f:
