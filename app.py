@@ -69,3 +69,45 @@ if uploaded_file:
         st.error("❌ No se encontraron columnas válidas para keywords o año en el archivo.")
 else:
     st.info("📌 Carga un archivo CSV desde la barra lateral para comenzar.")
+
+!pip install reportlab
+
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from datetime import datetime
+import os
+
+def exportar_informe_pdf(top_keywords, df_trends):
+    nombre_archivo = "informe_microtendencias.pdf"
+    c = canvas.Canvas(nombre_archivo, pagesize=letter)
+    width, height = letter
+
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(50, height - 50, "📊 Informe de MicroTendencias Emergentes")
+    c.setFont("Helvetica", 10)
+    c.drawString(50, height - 70, f"Fecha de generación: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(50, height - 100, "🔝 Top 10 Palabras Clave:")
+    c.setFont("Helvetica", 10)
+    y = height - 120
+    for i, (kw, freq) in enumerate(top_keywords[:10], 1):
+        c.drawString(60, y, f"{i}. {kw} ({freq} menciones)")
+        y -= 15
+
+    plt.figure(figsize=(8, 4))
+    top10_df = pd.DataFrame(top_keywords[:10], columns=["Keyword", "Frecuencia"])
+    top10_df_sorted = top10_df.sort_values(by="Frecuencia")
+    plt.barh(top10_df_sorted["Keyword"], top10_df_sorted["Frecuencia"], color="skyblue")
+    plt.title("Top 10 Keywords")
+    plt.tight_layout()
+    grafico_path = "grafico_top10.png"
+    plt.savefig(grafico_path)
+    plt.close()
+
+    c.drawImage(grafico_path, 50, y - 180, width=500, preserveAspectRatio=True, mask='auto')
+
+    c.showPage()
+    c.save()
+
+    return nombre_archivo
