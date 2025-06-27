@@ -1,4 +1,3 @@
-[pip install matplotlib]
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -18,7 +17,6 @@ with st.sidebar:
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
 
-    # Normalizar nombres de columnas
     df.columns = [col.strip().lower() for col in df.columns]
     possible_keywords_cols = ['author keywords', 'author_keywords', 'keywords', 'keyword']
     possible_year_cols = ['year', 'publication year']
