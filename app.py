@@ -115,7 +115,3 @@ if st.button("📄 Exportar informe como PDF"):
     with open(nombre_pdf, "rb") as f:
         st.download_button("⬇️ Descargar Informe PDF", f, file_name=nombre_pdf, mime="application/pdf")
 
-if st.button("📄 Exportar informe como PDF"):
-    nombre_pdf = exportar_informe_pdf(top_keywords, df_trends)
-    with open(nombre_pdf, "rb") as f:
-        st.download_button("⬇️ Descargar Informe PDF", f, file_name=nombre_pdf, mime="application/pdf")
