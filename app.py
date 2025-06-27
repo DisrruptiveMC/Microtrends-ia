@@ -70,8 +70,6 @@ if uploaded_file:
 else:
     st.info("📌 Carga un archivo CSV desde la barra lateral para comenzar.")
 
-!pip install reportlab
-
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from datetime import datetime
