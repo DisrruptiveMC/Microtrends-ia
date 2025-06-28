@@ -8,10 +8,8 @@ from reportlab.pdfgen import canvas
 import os
 import streamlit as st
 
-# Título de la App
 st.title("📊 MicroTRENDS IA - Dashboard")
 
-# 1. Función con cache para cargar datos
 @st.cache_data
 def cargar_scopus():
     try:
@@ -21,7 +19,6 @@ def cargar_scopus():
         st.error(f"❌ Error al cargar el archivo de Scopus: {e}")
         return pd.DataFrame()
 
-# 2. Cargar y validar
 scopus_df = cargar_scopus()
 if scopus_df.empty:
     st.stop()
