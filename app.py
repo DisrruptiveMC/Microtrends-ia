@@ -15,7 +15,7 @@ st.title("📊 MicroTRENDS IA - Dashboard")
 @st.cache_data
 def cargar_scopus():
     try:
-        df = pd.read_csv('scopus_consolidado.csv', encoding='utf-8')
+        df = pd.read_csv('scopus (8).csv', encoding='utf-8')
         return df
     except Exception as e:
         st.error(f"❌ Error al cargar el archivo de Scopus: {e}")
