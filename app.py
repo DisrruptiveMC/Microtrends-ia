@@ -84,32 +84,64 @@ st.pyplot(fig2)
 
 # 6. PDF Export
 def exportar_informe_pdf(top_keywords, df_trends):
+    from reportlab.lib.utils import ImageReader
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    import os
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     file_name = f"microtrends_report_{timestamp}.pdf"
+
+    # 1. Generar y guardar las gráficas como imagen
+    fig1, ax1 = plt.subplots(figsize=(12, 6))
+    df_sorted = pd.DataFrame(top_keywords, columns=["Keyword", "Frecuencia"]).sort_values(by="Frecuencia", ascending=True)
+    ax1.barh(df_sorted["Keyword"], df_sorted["Frecuencia"], color='skyblue')
+    ax1.set_title("Top 20 Palabras Clave Más Frecuentes")
+    img_path1 = "grafico_top_keywords.png"
+    fig1.tight_layout()
+    fig1.savefig(img_path1)
+    plt.close(fig1)
+
+    fig2, ax2 = plt.subplots(figsize=(14, 7))
+    sns.lineplot(data=df_trends, x='Year', y='Frecuencia', hue='Keyword', marker='o', ax=ax2)
+    ax2.set_title("Evolución de las 10 Principales Palabras Clave por Año")
+    fig2.tight_layout()
+    img_path2 = "grafico_tendencias.png"
+    fig2.savefig(img_path2)
+    plt.close(fig2)
+
+    # 2. Crear PDF
     c = canvas.Canvas(file_name, pagesize=letter)
     c.setFont("Helvetica-Bold", 16)
     c.drawString(50, 750, "Informe de Microtendencias - IA")
     c.setFont("Helvetica", 12)
     y = 720
+
+    # Texto Top 10
     c.drawString(50, y, "Top 10 Palabras Clave Emergentes:")
     y -= 20
     for word, count in top_keywords[:10]:
         c.drawString(70, y, f"{word}: {count}")
         y -= 20
-    y -= 10
-    c.drawString(50, y, "Tendencias por Año:")
-    y -= 20
-    for year in sorted(df_trends['Year'].unique()):
-        c.drawString(70, y, f"Año {year}:")
-        y -= 20
-        for _, row in df_trends[df_trends['Year'] == year].iterrows():
-            c.drawString(90, y, f"{row['Keyword']}: {row['Frecuencia']}")
-            y -= 15
-            if y < 100:
-                c.showPage()
-                c.setFont("Helvetica", 12)
-                y = 750
+
+    # Insertar primera imagen
+    c.showPage()
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(50, 750, "📊 Gráfica: Palabras Clave Más Frecuentes")
+    c.drawImage(ImageReader(img_path1), 50, 300, width=500, preserveAspectRatio=True, mask='auto')
+
+    # Insertar segunda imagen
+    c.showPage()
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(50, 750, "📈 Gráfica: Tendencias por Año")
+    c.drawImage(ImageReader(img_path2), 50, 300, width=500, preserveAspectRatio=True, mask='auto')
+
     c.save()
+
+    # 3. Eliminar imágenes temporales
+    os.remove(img_path1)
+    os.remove(img_path2)
+
     return file_name
 
 if st.button("📄 Exportar informe como PDF"):
